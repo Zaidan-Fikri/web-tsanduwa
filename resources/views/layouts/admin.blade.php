@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/admin.js') }}?v=2"></script>
+    <script src="{{ asset('js/admin.js') }}?v=3"></script>
     @stack('scripts')
 </body>
 </html>

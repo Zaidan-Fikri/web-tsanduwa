@@ -5,45 +5,78 @@ namespace App\Support;
 use GdImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Throwable;
 
 /**
  * Kompres gambar upload: diperkecil sesuai kebutuhan tampilan, diubah ke WebP,
  * dan metadata EXIF (termasuk lokasi GPS dari foto HP) ikut terbuang.
- * Jika GD tidak tersedia atau gagal, file asli tetap disimpan.
+ * Jika GD tidak tersedia atau gagal, isi file asli yang dipakai.
  */
 class ImageOptimizer
 {
     private const QUALITY = 80;
 
+    private const EXTENSIONS = ['image/webp' => 'webp', 'image/png' => 'png', 'image/jpeg' => 'jpg'];
+
     /**
-     * Simpan gambar ke disk "uploads" di dalam $folder, mengembalikan path relatif disk
-     * (mis. "berita/abc.webp").
+     * Sisi terpanjang maksimal (piksel) per menu, disesuaikan dengan ukuran tampil di website.
      */
-    public static function store(UploadedFile $file, string $folder, int $maxSize): string
+    public const MAX_SIZES = [
+        'slider' => 1920,
+        'pengaturan' => 1920,   // termasuk brosur SPMB agar tulisannya tetap terbaca
+        'galeri' => 1600,
+        'berita' => 1280,
+        'fasilitas' => 1280,
+        'prestasi' => 1000,
+        'unit-kerja' => 900,
+        'ekskul' => 800,
+        'sdm' => 800,
+    ];
+
+    public static function maxSizeFor(string $folder): int
     {
-        if (! function_exists('imagecreatefromstring')) {
-            return $file->store($folder, 'uploads');
+        return self::MAX_SIZES[$folder] ?? 1600;
+    }
+
+    /**
+     * Kompres gambar upload dan kembalikan hasilnya (isi file + info) untuk disimpan.
+     * Jika GD tidak tersedia atau kompres tidak membantu, isi file asli yang dikembalikan.
+     *
+     * @return array{data: string, mime: string, extension: string, width: ?int, height: ?int}
+     */
+    public static function encode(UploadedFile $file, int $maxSize): array
+    {
+        return static::encodeFile($file->getRealPath(), $maxSize);
+    }
+
+    /**
+     * Sama seperti encode(), untuk file gambar di disk (dipakai saat memindahkan gambar lama ke database).
+     *
+     * @return array{data: string, mime: string, extension: string, width: ?int, height: ?int}
+     */
+    public static function encodeFile(string $path, int $maxSize): array
+    {
+        $optimized = null;
+
+        if (function_exists('imagecreatefromstring')) {
+            try {
+                $optimized = static::optimize($path, $maxSize);
+            } catch (Throwable $e) {
+                Log::warning('Kompres gambar gagal, memakai file asli', ['error' => $e->getMessage()]);
+            }
         }
 
-        try {
-            $optimized = static::optimize($file->getRealPath(), $maxSize);
-        } catch (Throwable $e) {
-            Log::warning('Kompres gambar gagal, menyimpan file asli', ['error' => $e->getMessage()]);
-            $optimized = null;
-        }
+        $data = $optimized[0] ?? file_get_contents($path);
+        $info = @getimagesizefromstring($data) ?: [null, null, 'mime' => null];
+        $mime = $info['mime'] ?? 'application/octet-stream';
 
-        if ($optimized === null) {
-            return $file->store($folder, 'uploads');
-        }
-
-        [$binary, $extension] = $optimized;
-        $path = trim($folder, '/').'/'.Str::random(40).'.'.$extension;
-        Storage::disk('uploads')->put($path, $binary);
-
-        return $path;
+        return [
+            'data' => $data,
+            'mime' => $mime,
+            'extension' => self::EXTENSIONS[$mime] ?? 'bin',
+            'width' => $info[0],
+            'height' => $info[1],
+        ];
     }
 
     /**

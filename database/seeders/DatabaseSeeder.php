@@ -12,5 +12,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ContentSeeder::class,
         ]);
+
+        // Pindahkan gambar contoh (file public/img & link Unsplash) ke database dalam bentuk terkompres.
+        $this->command->call('media:import');
     }
 }

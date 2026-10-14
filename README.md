@@ -37,7 +37,8 @@ Sudah diterapkan:
 - Password di-hash (bcrypt); password baru minimal 8 karakter berisi huruf dan angka.
 - Semua isian divalidasi; teks selalu di-escape (anti-XSS); link hanya boleh `https://` atau `/...`.
 - Upload hanya JPG/PNG/WEBP maks. 10 MB, nama file acak, dan eksekusi script di `public/uploads` diblokir.
-- Gambar otomatis diperkecil & dikompres ke WebP (butuh ekstensi PHP `gd`; data EXIF/GPS ikut terhapus). Ukuran per menu diatur di `app/Http/Controllers/Admin/Concerns/HandlesUploads.php`.
+- Gambar dikompres dua kali: di browser sebelum diupload, lalu di server ke WebP (butuh ekstensi PHP `gd`; data EXIF/GPS ikut terhapus). Ukuran per menu diatur di `app/Support/ImageOptimizer.php`.
+- Semua gambar konten disimpan di **database** (tabel `media`) dan ditampilkan lewat `/media/{id}.webp`. Gambar lama (file `public/img` / link Unsplash) dipindahkan dengan `php artisan media:import`. Pastikan `max_allowed_packet` MySQL minimal 16M (XAMPP: `C:\xampp\mysql\bin\my.ini`).
 - Header keamanan (CSP, X-Frame-Options, nosniff, dll.); halaman admin tidak di-cache & tidak diindeks.
 - Menu *Pengguna Admin* hanya untuk peran Super Admin.
 

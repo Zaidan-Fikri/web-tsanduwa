@@ -46,24 +46,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConfirm(); });
 
-    // ===== Preview gambar sebelum upload =====
+    // ===== Kompres + preview gambar sebelum upload =====
     document.querySelectorAll('[data-image-field]').forEach(field => {
         const input = field.querySelector('[data-image-input]');
         const preview = field.querySelector('[data-preview]');
         const placeholder = field.querySelector('[data-placeholder]');
         const filename = field.querySelector('[data-filename]');
-        input.addEventListener('change', () => {
-            const file = input.files[0];
-            if (!file) return;
-            if (file.size > 10 * 1024 * 1024) {
-                alert('Ukuran gambar maksimal 10 MB.');
+        const form = input.closest('form');
+        const submits = form ? form.querySelectorAll('button[type=submit]') : [];
+        const maxSize = parseInt(field.dataset.maxSize || '1920', 10);
+
+        input.addEventListener('change', async () => {
+            const original = input.files[0];
+            if (!original) return;
+            if (original.size > 30 * 1024 * 1024) {
+                alert('Ukuran gambar terlalu besar (maksimal 30 MB sebelum dikompres).');
                 input.value = '';
                 return;
             }
+
+            // Kunci tombol simpan selama proses kompres agar file asli tidak terkirim.
+            submits.forEach(b => { b.disabled = true; b.classList.add('opacity-60', 'pointer-events-none'); });
+            filename.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-tosca-600 mr-1"></i> Mengompres gambar...';
+
+            const file = await compressImage(original, maxSize);
+            if (file !== original) {
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+            }
+
+            submits.forEach(b => { b.disabled = false; b.classList.remove('opacity-60', 'pointer-events-none'); });
+
+            if (file.size > 10 * 1024 * 1024) {
+                alert('Gambar masih lebih dari 10 MB setelah dikompres. Silakan pilih gambar lain.');
+                input.value = '';
+                filename.textContent = 'Format JPG, PNG, atau WEBP. Maksimal 10 MB.';
+                return;
+            }
+
             preview.src = URL.createObjectURL(file);
             preview.classList.remove('hidden');
             placeholder.classList.add('hidden');
-            filename.textContent = file.name;
+            filename.textContent = file === original
+                ? `${original.name} (${formatBytes(original.size)})`
+                : `${original.name}: ${formatBytes(original.size)} → ${formatBytes(file.size)} (sudah dikompres)`;
         });
     });
 
@@ -145,4 +172,47 @@ function initRepeaters() {
         });
         renumber();
     });
+}
+
+// ===== Kompres gambar di browser sebelum diupload =====
+// Gambar diperkecil (sisi terpanjang <= maxSize) lalu diubah ke WebP. Server tetap
+// mengompres lagi sesuai kebutuhan tiap menu. Jika browser tidak mendukung, file asli dipakai.
+async function compressImage(file, maxSize = 1920, quality = 0.85) {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type) || !window.createImageBitmap) return file;
+
+    try {
+        // imageOrientation: foto HP yang tersimpan miring otomatis diputar sesuai aslinya.
+        const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+        const scale = Math.min(1, maxSize / Math.max(bitmap.width, bitmap.height));
+        const width = Math.max(1, Math.round(bitmap.width * scale));
+        const height = Math.max(1, Math.round(bitmap.height * scale));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(bitmap, 0, 0, width, height);
+        if (bitmap.close) bitmap.close();
+
+        let blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', quality));
+        let ext = 'webp';
+        // Browser lama tanpa dukungan WebP: pakai JPEG untuk foto tanpa transparansi.
+        if (!blob || blob.type !== 'image/webp') {
+            if (file.type !== 'image/jpeg') return file;
+            blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
+            ext = 'jpg';
+        }
+
+        if (!blob || blob.size >= file.size) return file;
+
+        const name = file.name.replace(/\.[^.]+$/, '') + '.' + ext;
+        return new File([blob], name, { type: blob.type, lastModified: Date.now() });
+    } catch (e) {
+        return file;
+    }
+}
+
+function formatBytes(bytes) {
+    return bytes >= 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
 }

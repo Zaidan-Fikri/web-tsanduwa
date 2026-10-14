@@ -2,7 +2,13 @@
 
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SiteController;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +39,19 @@ Route::controller(SiteController::class)->group(function () {
     Route::get('agenda', 'agenda')->name('agenda');
     Route::get('spmb', 'spmb')->name('spmb');
 });
+
+// Gambar upload yang tersimpan di database. Tanpa session/cookie agar ringan & bisa di-cache browser.
+Route::get('media/{id}.{extension}', [MediaController::class, 'show'])
+    ->whereNumber('id')
+    ->where('extension', 'webp|png|jpg')
+    ->withoutMiddleware([
+        EncryptCookies::class,
+        AddQueuedCookiesToResponse::class,
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        ValidateCsrfToken::class,
+    ])
+    ->name('media.show');
 
 /*
 |--------------------------------------------------------------------------

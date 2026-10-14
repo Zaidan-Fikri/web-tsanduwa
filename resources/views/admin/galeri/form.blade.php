@@ -24,7 +24,7 @@
         <x-admin.input name="title" label="Judul / Keterangan" :value="$item->title" required maxlength="200" />
 
         <div data-gallery-type="foto" class="{{ $type === 'foto' ? '' : 'hidden' }}">
-            <x-admin.image name="image" label="Foto" :value="$item->image" :required="! $item->image" :removable="false" />
+            <x-admin.image :max-size="1600" name="image" label="Foto" :value="$item->image" :required="! $item->image" :removable="false" />
         </div>
         <div data-gallery-type="video" class="{{ $type === 'video' ? '' : 'hidden' }}">
             <x-admin.input name="youtube_url" label="Link Video YouTube" :value="$item->youtube_id ? 'https://www.youtube.com/watch?v='.$item->youtube_id : null" placeholder="https://www.youtube.com/watch?v=..." help="Salin link dari tombol Bagikan (Share) di YouTube." />

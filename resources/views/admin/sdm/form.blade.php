@@ -6,7 +6,7 @@
     <x-admin.page-header :title="$item->exists ? 'Ubah Data' : 'Tambah Guru / Tendik'" subtitle="Tenaga pendidik & kependidikan" icon="fa-chalkboard-user" />
 
     <x-admin.form-card :action="$item->exists ? route('admin.sdm.update', $item) : route('admin.sdm.store')" :method="$item->exists ? 'PUT' : 'POST'" :cancel="route('admin.sdm.index')" :files="true">
-        <x-admin.image name="photo" label="Foto" :value="$item->photo" help="Foto potret (tegak), perbandingan 3:4." />
+        <x-admin.image :max-size="800" name="photo" label="Foto" :value="$item->photo" help="Foto potret (tegak), perbandingan 3:4." />
         <div class="grid md:grid-cols-2 gap-5">
             <x-admin.input name="name" label="Nama Lengkap & Gelar" :value="$item->name" required />
             <x-admin.input name="position" label="Jabatan / Mata Pelajaran" :value="$item->position" required placeholder="Contoh: Guru Matematika" />

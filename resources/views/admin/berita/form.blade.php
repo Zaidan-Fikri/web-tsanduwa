@@ -15,7 +15,7 @@
             <x-admin.select name="category" label="Kategori" :options="collect(\App\Models\Post::CATEGORIES)->map(fn ($c) => $c[0])->all()" :value="$item->category" required />
             <x-admin.input name="published_at" label="Tanggal Terbit" type="date" :value="$item->published_at?->format('Y-m-d')" required help="Tanggal di masa depan = berita terjadwal." />
         </div>
-        <x-admin.image name="image" label="Foto Utama" :value="$item->image" />
+        <x-admin.image :max-size="1280" name="image" label="Foto Utama" :value="$item->image" />
         <x-admin.textarea name="excerpt" label="Ringkasan" :value="$item->excerpt" rows="2" maxlength="300" help="Opsional. Tampil di kartu daftar berita. Jika kosong diambil dari awal isi berita." />
         <x-admin.textarea name="content" label="Isi Berita" :value="$item->content" rows="14" required help="Pisahkan paragraf dengan satu baris kosong (tekan Enter dua kali)." />
         <x-admin.toggle name="is_published" label="Terbitkan" :checked="$item->is_published" help="Matikan untuk menyimpan sebagai draf (tidak tampil di website)." />

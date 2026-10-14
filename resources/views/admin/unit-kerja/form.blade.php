@@ -8,7 +8,7 @@
     <x-admin.page-header :title="$item->exists ? 'Ubah Unit Kerja' : 'Tambah Unit Kerja'" subtitle="Unit kerja Wakil Kepala Madrasah" icon="fa-briefcase" />
 
     <x-admin.form-card :action="$item->exists ? route('admin.unit-kerja.update', $item) : route('admin.unit-kerja.store')" :method="$item->exists ? 'PUT' : 'POST'" :cancel="route('admin.unit-kerja.index')" :files="true">
-        <x-admin.image name="photo" label="Foto Waka" :value="$item->photo" help="Disarankan PNG latar transparan, potret (tegak)." />
+        <x-admin.image :max-size="900" name="photo" label="Foto Waka" :value="$item->photo" help="Disarankan PNG latar transparan, potret (tegak)." />
         <div class="grid md:grid-cols-2 gap-5">
             <x-admin.input name="position" label="Nama Jabatan (tab)" :value="$item->position" required placeholder="Contoh: Waka Kurikulum" />
             <x-admin.input name="person_name" label="Nama Pejabat" :value="$item->person_name" required />

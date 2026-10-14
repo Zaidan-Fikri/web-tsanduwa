@@ -1,8 +1,8 @@
-@props(['name', 'label', 'value' => null, 'help' => null, 'required' => false, 'removable' => true])
+@props(['name', 'label', 'value' => null, 'help' => null, 'required' => false, 'removable' => true, 'maxSize' => 1920])
 
 @php($id = 'f_'.$name)
 @php($url = media_url($value))
-<div {{ $attributes->only('class') }} data-image-field>
+<div {{ $attributes->only('class') }} data-image-field data-max-size="{{ (int) $maxSize }}">
     <span class="block text-sm font-semibold text-slate-700 mb-1.5">{{ $label }} @if ($required)<span class="text-rose-500">*</span>@endif</span>
     <div class="flex flex-col sm:flex-row gap-4 items-start">
         <div class="w-full sm:w-44 aspect-[4/3] shrink-0 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center relative">
@@ -14,7 +14,7 @@
                 <i class="fa-solid fa-cloud-arrow-up"></i> {{ $url ? 'Ganti Gambar' : 'Pilih Gambar' }}
             </label>
             <input id="{{ $id }}" name="{{ $name }}" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" data-image-input>
-            <p data-filename class="text-xs text-slate-500">Format JPG, PNG, atau WEBP. Maksimal 10 MB — otomatis dikompres agar ringan.</p>
+            <p data-filename class="text-xs text-slate-500">Format JPG, PNG, atau WEBP. Otomatis dikompres sebelum diupload.</p>
             @if ($help)
                 <p class="text-xs text-slate-500">{{ $help }}</p>
             @endif

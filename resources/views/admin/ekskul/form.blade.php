@@ -13,7 +13,7 @@
             <x-admin.input name="schedule" label="Jadwal" :value="$item->schedule" placeholder="Contoh: Jumat, 13.00 WIB" />
         </div>
         <x-admin.textarea name="description" label="Deskripsi Singkat" :value="$item->description" rows="3" maxlength="500" />
-        <x-admin.image name="image" label="Foto (untuk slider Beranda)" :value="$item->image" help="Opsional. Jika kosong, kartu di Beranda memakai ikon." />
+        <x-admin.image :max-size="800" name="image" label="Foto (untuk slider Beranda)" :value="$item->image" help="Opsional. Jika kosong, kartu di Beranda memakai ikon." />
         <div class="grid md:grid-cols-2 gap-5">
             <x-admin.input name="sort_order" label="Urutan" type="number" min="0" :value="$item->sort_order ?? 0" />
             <x-admin.toggle name="show_on_home" label="Tampilkan di slider Beranda" :checked="$item->show_on_home" class="self-end" />

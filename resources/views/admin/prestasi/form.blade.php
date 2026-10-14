@@ -15,7 +15,7 @@
             <x-admin.input name="year" label="Tahun" type="number" min="1980" :max="now()->year + 1" :value="$item->year" required />
             <x-admin.icon-picker name="icon" label="Ikon Bidang" :value="$item->icon" />
         </div>
-        <x-admin.image name="image" label="Foto (untuk kartu di Beranda)" :value="$item->image" help="Opsional." />
+        <x-admin.image :max-size="1000" name="image" label="Foto (untuk kartu di Beranda)" :value="$item->image" help="Opsional." />
         <div class="grid md:grid-cols-2 gap-4">
             <x-admin.toggle name="show_on_home" label="Tampilkan di Beranda" :checked="$item->show_on_home" help="Beranda menampilkan maksimal 3 prestasi terbaru." />
             <x-admin.toggle name="is_featured" label="Jadikan Prestasi Unggulan" :checked="$item->is_featured" help="Disorot di atas halaman Prestasi (hanya satu)." />
