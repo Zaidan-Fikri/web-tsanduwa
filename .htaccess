@@ -1,0 +1,14 @@
+# Dipakai bila seluruh project diletakkan langsung di public_html (shared hosting).
+# Semua request diarahkan ke folder public/, sehingga file seperti .env, composer.json,
+# storage/ dan vendor/ tidak bisa dibuka dari internet.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Lapisan tambahan: tolak akses langsung ke file tersembunyi dan file konfigurasi.
+<FilesMatch "^(\.env.*|\.git.*|composer\.(json|lock)|package(-lock)?\.json|artisan|phpunit\.xml|vite\.config\.js)$">
+    Require all denied
+</FilesMatch>
+
+Options -Indexes
