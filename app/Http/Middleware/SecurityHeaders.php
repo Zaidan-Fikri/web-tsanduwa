@@ -47,7 +47,11 @@ class SecurityHeaders
             $response->headers->set($name, $value, false);
         }
 
+        // Sembunyikan versi PHP (header ini ditambahkan PHP sendiri, bukan oleh Laravel).
         $response->headers->remove('X-Powered-By');
+        if (! headers_sent()) {
+            header_remove('X-Powered-By');
+        }
 
         return $response;
     }
