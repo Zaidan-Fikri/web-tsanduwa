@@ -1,0 +1,102 @@
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f8fafc;
+}
+.bg-pattern {
+    background-color: #0f766e;
+    background-image: radial-gradient(#14b8a6 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+.active-tab {
+    border-bottom: 3px solid #f59e0b;
+    color: #0f766e;
+    font-weight: 700;
+}
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #0d9488;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #0f766e;
+}
+/* ===== Beranda ===== */
+.slider-track { scrollbar-width: none; }
+.slider-track::-webkit-scrollbar { display: none; }
+.person-card, .ekskul-card { flex: 0 0 calc(50% - 12px); scroll-snap-align: start; text-align: center; }
+.fasilitas-card { flex: 0 0 100%; scroll-snap-align: start; }
+@media (min-width: 768px) {
+    .person-card, .ekskul-card { flex-basis: calc(33.333% - 16px); }
+}
+@media (min-width: 1024px) {
+    .person-card { flex-basis: calc(20% - 19.2px); }
+    .ekskul-card { flex-basis: calc(25% - 18px); }
+    .fasilitas-card { flex-basis: calc(50% - 12px); }
+}
+.person-photo { aspect-ratio: 3 / 4; border-radius: 15px; overflow: hidden; background: #ccfbf1; transition: transform .3s ease; }
+.person-photo img { width: 100%; height: 100%; object-fit: cover; }
+.person-card:hover .person-photo { transform: translateY(-4px); }
+.person-card h5 { font-size: 15px; font-weight: 600; color: #333; margin: 15px 0 5px; }
+.person-card p { font-size: 13px; color: #6c757d; }
+.fasilitas-card { display: flex; height: 260px; border-radius: 18px; overflow: hidden; cursor: pointer; transition: transform .3s ease; }
+.fasilitas-card:hover { transform: translateY(-4px); }
+.fasilitas-img { width: 50%; height: 100%; overflow: hidden; background: #115e59; }
+.fasilitas-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease; }
+.fasilitas-card:hover .fasilitas-img img { transform: scale(1.05); }
+.fasilitas-body { width: 50%; padding: 30px; background: #0f766e; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+.fasilitas-body h5 { font-size: 22px; line-height: 32px; font-weight: 600; margin-bottom: 14px; }
+.fasilitas-body span { font-size: 12.5px; font-weight: 700; color: #fbbf24; }
+.ekskul-card { border: 1px solid #e8edf3; border-radius: 18px; overflow: hidden; background: #fff; transition: transform .3s ease; }
+.ekskul-card:hover { transform: translateY(-4px); }
+.ekskul-img { height: 200px; background: #ccfbf1; }
+.ekskul-img img { width: 100%; height: 100%; object-fit: cover; }
+.ekskul-card h5 { padding: 25px; font-size: 16px; font-weight: 600; color: #333; }
+.prestasi-card { display: flex; flex-direction: column; background: #fff; border: 1px solid #edf0f3; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,40,64,.04), 0 10px 28px rgba(16,40,64,.05); transition: transform .2s ease, box-shadow .2s ease; }
+.prestasi-card:hover { transform: translateY(-4px); box-shadow: 0 6px 14px rgba(16,40,64,.07), 0 22px 46px rgba(16,40,64,.12); }
+.prestasi-foto { position: relative; aspect-ratio: 4 / 3; background: #ccfbf1; }
+.prestasi-foto img { width: 100%; height: 100%; object-fit: cover; }
+.prestasi-juara { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; gap: 6px; background: #0f766e; color: #fff; font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 100px; box-shadow: 0 4px 12px rgba(15,118,110,.35); }
+.prestasi-juara i { color: #fbbf24; }
+.prestasi-body { display: flex; flex-direction: column; gap: 8px; flex: 1; padding: 16px 18px 18px; }
+.prestasi-tingkat { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #0f766e; background: rgba(15,118,110,.09); border-radius: 100px; padding: 4px 10px; }
+.prestasi-card h5 { font-size: 15.5px; font-weight: 600; color: #333; line-height: 1.45; }
+.prestasi-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: auto; padding-top: 6px; font-size: 12.5px; color: #6c757d; }
+.prestasi-meta i { color: #0f766e; margin-right: 4px; }
+@media (max-width: 640px) {
+    .fasilitas-card { flex-direction: column; height: auto; }
+    .fasilitas-img, .fasilitas-body { width: 100%; }
+    .fasilitas-img { height: 200px; }
+}
+.syarat-item { display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; user-select: none; transition: background .2s, border-color .2s; }
+.syarat-item:hover { border-color: #5eead4; }
+.syarat-cb { position: absolute; opacity: 0; pointer-events: none; }
+.syarat-box { width: 24px; height: 24px; flex-shrink: 0; border-radius: 7px; border: 2px solid #cbd5e1; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 12px; transition: all .2s; }
+.syarat-label { font-weight: 500; color: #334155; }
+.syarat-item:has(.syarat-cb:checked) { background: #f0fdfa; border-color: #2dd4bf; }
+.syarat-cb:checked + .syarat-box { background: #0d9488; border-color: #0d9488; color: #fff; }
+.syarat-cb:checked ~ .syarat-label { color: #115e59; }
+.syarat-cb:focus-visible + .syarat-box { outline: 2px solid #0d9488; outline-offset: 2px; }
+.ekskul-filter { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; background: #fff; color: #334155; border: 1px solid #e2e8f0; transition: all .2s; }
+.ekskul-filter:hover { border-color: #5eead4; color: #0f766e; }
+.ekskul-filter i { color: #0d9488; }
+.ekskul-filter span { font-size: 11px; background: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 999px; }
+.ekskul-filter.active { background: #0f766e; color: #fff; border-color: #0f766e; }
+.ekskul-filter.active i { color: #fbbf24; }
+.ekskul-filter.active span { background: #fbbf24; color: #042f2e; }
+/* Animasi slider Beranda: geser ke kiri, lalu zoom */
+.hero-img { transform: scale(1.12); transform-origin: center; will-change: transform; }
+.hero-img.hero-anim { animation: heroPanZoom 7.5s ease-in-out forwards; }
+@keyframes heroPanZoom {
+    0%   { transform: scale(1.12) translateX(3%); }
+    55%  { transform: scale(1.12) translateX(-3%); }
+    100% { transform: scale(1.25) translateX(-3%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-img.hero-anim { animation: none; }
+}
