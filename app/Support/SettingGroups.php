@@ -101,7 +101,7 @@ class SettingGroups
                     'social_tiktok' => ['label' => 'TikTok', 'type' => 'url'],
                     'maps_query' => ['label' => 'Kata Kunci Peta (Google Maps)', 'type' => 'text', 'help' => 'Contoh: MTs Darul Ulum Waru, Kureksari, Waru, Sidoarjo'],
                     'maps_link' => ['label' => 'Link Buka di Google Maps', 'type' => 'url'],
-                    'rdm_url' => ['label' => 'Link Portal RDM', 'type' => 'url', 'help' => 'Jika diisi, tombol "Masuk Portal RDM" akan membuka alamat ini.'],
+                    'rdm_url' => ['label' => 'Link Portal RDM', 'type' => 'url', 'help' => 'Jika diisi, tombol "Portal RDM" di navbar langsung membuka alamat ini (tanpa form login).'],
                 ],
             ],
         ];

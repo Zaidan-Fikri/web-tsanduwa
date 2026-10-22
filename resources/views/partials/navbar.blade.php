@@ -87,10 +87,17 @@
                         <span>SPMB</span>
                     </a>
 
-                    <button type="button" onclick="openRDMModal()" class="bg-tosca-700 hover:bg-tosca-800 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition flex items-center space-x-2 border border-tosca-600">
-                        <i class="fa-solid fa-laptop-code text-gold-400"></i>
-                        <span>Portal RDM</span>
-                    </button>
+                    @if (setting('rdm_url'))
+                        <a href="{{ setting('rdm_url') }}" target="_blank" rel="noopener" class="bg-tosca-700 hover:bg-tosca-800 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition flex items-center space-x-2 border border-tosca-600">
+                            <i class="fa-solid fa-laptop-code text-gold-400"></i>
+                            <span>Portal RDM</span>
+                        </a>
+                    @else
+                        <button type="button" onclick="openRDMModal()" class="bg-tosca-700 hover:bg-tosca-800 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition flex items-center space-x-2 border border-tosca-600">
+                            <i class="fa-solid fa-laptop-code text-gold-400"></i>
+                            <span>Portal RDM</span>
+                        </button>
+                    @endif
                 </nav>
 
                 <!-- Mobile menu button -->
@@ -132,7 +139,11 @@
             </div>
             <div class="pt-2 grid grid-cols-2 gap-2">
                 <a href="{{ route('spmb') }}" class="w-full bg-gold-500 text-slate-900 font-bold py-2 rounded-lg text-center shadow">SPMB</a>
-                <button type="button" onclick="openRDMModal(); toggleMobileMenu();" class="w-full bg-tosca-700 text-white font-semibold py-2 rounded-lg text-center shadow">Rapor Digital (RDM)</button>
+                @if (setting('rdm_url'))
+                    <a href="{{ setting('rdm_url') }}" target="_blank" rel="noopener" class="w-full bg-tosca-700 text-white font-semibold py-2 rounded-lg text-center shadow">Rapor Digital (RDM)</a>
+                @else
+                    <button type="button" onclick="openRDMModal(); toggleMobileMenu();" class="w-full bg-tosca-700 text-white font-semibold py-2 rounded-lg text-center shadow">Rapor Digital (RDM)</button>
+                @endif
             </div>
         </div>
     </header>
