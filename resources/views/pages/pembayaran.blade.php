@@ -68,6 +68,18 @@
                         </div>
                         <p id="code-error" class="text-sm font-semibold text-rose-600 mt-3 {{ $errors->has('access_code') ? '' : 'hidden' }}"><i class="fa-solid fa-circle-exclamation mr-1"></i><span>{{ $errors->first('access_code') }}</span></p>
                         <p class="text-xs text-slate-500 mt-3"><i class="fa-solid fa-circle-info text-tosca-600 mr-1"></i>Kode akses 6 huruf/angka dari bagian keuangan madrasah.</p>
+                        @if ($callCenter)
+                            @php($contactName = preg_match('/\(([^)]+)\)/', $callCenter, $m) ? trim($m[1]) : 'Bagian Keuangan')
+                            <a id="code-wa-link" href="{{ wa_link($callCenter) }}" data-wa-base="{{ wa_link($callCenter) }}" target="_blank" rel="noopener noreferrer"
+                                class="mt-4 flex items-center gap-3 p-3 rounded-xl bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 hover:border-emerald-200 transition group">
+                                <span class="w-10 h-10 shrink-0 rounded-xl bg-[#25D366] text-white flex items-center justify-center text-xl"><i class="fa-brands fa-whatsapp"></i></span>
+                                <span class="flex-1 text-left">
+                                    <span class="block text-sm font-bold text-emerald-800">Belum punya / lupa kode akses?</span>
+                                    <span class="block text-xs text-emerald-700">Tanyakan ke {{ $contactName }} via WhatsApp</span>
+                                </span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-emerald-600 text-xs group-hover:translate-x-0.5 transition"></i>
+                            </a>
+                        @endif
                         <div class="grid grid-cols-2 gap-2 mt-6">
                             <button type="button" onclick="closeCodeModal()" class="px-4 py-3 rounded-xl text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Batal</button>
                             <button type="submit" class="px-4 py-3 rounded-xl text-sm font-bold bg-tosca-700 hover:bg-tosca-800 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-unlock text-gold-400"></i> Lihat Tagihan</button>
@@ -222,10 +234,18 @@
             }
             showNisnError('');
             document.getElementById('code-modal-nisn').textContent = nisn;
+            updateWaLink(nisn);
             codeModal.classList.remove('hidden');
             codeModal.classList.add('flex');
             document.body.style.overflow = 'hidden';
             setTimeout(() => codeInput.focus(), 50);
+        }
+        // Pesan WhatsApp otomatis berisi NISN yang diketik, agar petugas tahu siswa yang dimaksud.
+        function updateWaLink(nisn) {
+            const link = document.getElementById('code-wa-link');
+            if (!link) return;
+            const message = "Assalamu'alaikum, saya wali murid dengan NISN " + nisn + ". Mohon informasi kode akses untuk cek tagihan di website madrasah. Terima kasih.";
+            link.href = link.dataset.waBase + '?text=' + encodeURIComponent(message);
         }
         function closeCodeModal() {
             codeModal.classList.add('hidden');
@@ -247,7 +267,11 @@
         });
         document.addEventListener('keydown', e => { if (e.key === 'Escape' && !codeModal.classList.contains('hidden')) closeCodeModal(); });
         // Kode salah / NISN terkunci: pop-up langsung terbuka lagi beserta pesannya.
-        if (!codeModal.classList.contains('hidden')) { document.body.style.overflow = 'hidden'; codeInput.focus(); }
+        if (!codeModal.classList.contains('hidden')) {
+            document.body.style.overflow = 'hidden';
+            updateWaLink(nisnInput.value.replace(/\D/g, ''));
+            codeInput.focus();
+        }
 
         function copyBankAccount(btn) {
             const label = btn.querySelector('span');
