@@ -29,9 +29,9 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10 space-y-8">
         <!-- Form NISN -->
         <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10">
-            <form action="{{ route('pembayaran.check') }}" method="POST" id="bill-form" class="grid sm:grid-cols-12 gap-3" autocomplete="off" novalidate>
+            <form action="{{ route('pembayaran.check') }}" method="POST" id="bill-form" class="flex flex-col sm:flex-row sm:items-end gap-3" autocomplete="off" novalidate>
                 @csrf
-                <div class="sm:col-span-9">
+                <div class="flex-1 min-w-0">
                     <label for="nisn" class="block text-xs font-bold text-slate-600 mb-1.5">NISN Siswa</label>
                     <div class="relative">
                         <i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-tosca-600"></i>
@@ -40,9 +40,9 @@
                             class="w-full pl-11 pr-4 py-3.5 rounded-xl border text-base font-semibold tracking-wider focus:ring-2 focus:ring-tosca-600 focus:border-tosca-600 focus:outline-none {{ $errors->has('nisn') ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200' }}">
                     </div>
                 </div>
-                <div class="sm:col-span-3 flex items-end">
-                    <button type="button" onclick="openCodeModal()" class="w-full bg-tosca-700 hover:bg-tosca-800 text-white font-bold px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition inline-flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass text-gold-400"></i> Cek Tagihan
+                <div class="shrink-0">
+                    <button type="button" onclick="openCodeModal()" class="w-full sm:w-auto whitespace-nowrap border border-transparent bg-tosca-700 hover:bg-tosca-800 text-white font-bold px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition inline-flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-gold-400"></i> Cek Pembayaran
                     </button>
                 </div>
 

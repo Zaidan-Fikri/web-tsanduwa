@@ -62,14 +62,14 @@
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="admin-table w-full">
-                    <thead><tr><th>Waktu</th><th>File</th><th>Kelas</th><th>Siswa</th><th>Total Tagihan</th><th>Oleh</th></tr></thead>
+                    <thead><tr><th>Waktu</th><th>File</th><th>Jumlah Kelas</th><th>Jumlah Siswa</th><th>Total Tagihan</th><th>Oleh</th></tr></thead>
                     <tbody>
                         @foreach ($imports as $import)
                             <tr>
                                 <td class="whitespace-nowrap text-xs text-slate-600">{{ $import->created_at->translatedFormat('d M Y H:i') }}</td>
                                 <td class="text-sm text-slate-800 max-w-xs truncate" title="{{ $import->file_name }}">{{ $import->file_name }}</td>
-                                <td>{{ $import->sheet_count }}</td>
-                                <td>{{ $import->row_count }}</td>
+                                <td class="whitespace-nowrap">{{ $import->sheet_count }} kelas</td>
+                                <td class="whitespace-nowrap">{{ $import->row_count }} siswa</td>
                                 <td class="font-semibold whitespace-nowrap">{{ rupiah($import->total_amount) }}</td>
                                 <td class="text-xs text-slate-600">{{ $import->user?->name ?? '-' }}</td>
                             </tr>
