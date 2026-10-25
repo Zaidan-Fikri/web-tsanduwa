@@ -104,6 +104,16 @@ class SettingGroups
                     'rdm_url' => ['label' => 'Link Portal RDM', 'type' => 'url', 'help' => 'Jika diisi, tombol "Portal RDM" di navbar langsung membuka alamat ini (tanpa form login).'],
                 ],
             ],
+            'pembayaran' => [
+                'title' => 'Info Pembayaran',
+                'icon' => 'fa-wallet',
+                'description' => 'Informasi cara membayar yang tampil di halaman cek tagihan (menu Informasi → Pembayaran).',
+                'fields' => [
+                    'spp_call_center' => ['label' => 'Call Center Pembayaran', 'type' => 'text', 'help' => 'Nomor HP/WA petugas, contoh: 0822-3240-0303 (Bu Itaul). Otomatis terisi dari footer file Excel.'],
+                    'spp_bank_account' => ['label' => 'Rekening Transfer', 'type' => 'text', 'help' => 'Contoh: BCA 7205002715 a.n. Itaul Khusnah. Otomatis terisi dari footer file Excel.'],
+                    'spp_notes' => ['label' => 'Catatan untuk Wali Murid', 'type' => 'textarea', 'rows' => 3, 'help' => 'Contoh: Setelah transfer, kirim bukti pembayaran ke call center beserta nama & kelas siswa.'],
+                ],
+            ],
         ];
     }
 

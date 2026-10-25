@@ -29,7 +29,8 @@
     @endif
 
     <!-- Statistik -->
-    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+    @if ($stats)
+    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-{{ min(count($stats), 7) }} gap-4 mb-6">
         @foreach ($stats as [$label, $count, $icon, $route])
             <a href="{{ route($route) }}" class="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:-translate-y-1 hover:shadow-lg transition group">
                 <span class="w-11 h-11 rounded-xl bg-tosca-50 text-tosca-700 flex items-center justify-center text-lg group-hover:bg-tosca-700 group-hover:text-gold-400 transition"><i class="fa-solid {{ $icon }}"></i></span>
@@ -38,20 +39,15 @@
             </a>
         @endforeach
     </div>
+    @endif
 
     <div class="grid lg:grid-cols-5 gap-6">
         <!-- Aksi cepat -->
-        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        @if ($actions)
+        <div class="{{ $latestPosts !== null ? 'lg:col-span-2' : 'lg:col-span-5' }} bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <h2 class="font-extrabold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-bolt text-gold-500"></i> Aksi Cepat</h2>
             <div class="grid grid-cols-2 gap-3 mt-4">
-                @foreach ([
-                    ['Tulis Berita', 'fa-pen-to-square', route('admin.berita.create')],
-                    ['Tambah Prestasi', 'fa-trophy', route('admin.prestasi.create')],
-                    ['Upload Foto', 'fa-camera', route('admin.galeri.create')],
-                    ['Tambah Agenda', 'fa-calendar-plus', route('admin.agenda.create')],
-                    ['Tambah Guru', 'fa-user-plus', route('admin.sdm.create')],
-                    ['Info SPMB', 'fa-bullhorn', route('admin.settings.edit', 'spmb')],
-                ] as [$label, $icon, $url])
+                @foreach ($actions as [$label, $icon, $url])
                     <a href="{{ $url }}" class="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-slate-100 bg-slate-50 hover:bg-tosca-50 hover:border-tosca-200 hover:-translate-y-1 hover:shadow-lg text-center transition">
                         <i class="fa-solid {{ $icon }} text-tosca-700 text-lg"></i>
                         <span class="text-xs font-bold text-slate-700">{{ $label }}</span>
@@ -60,8 +56,11 @@
             </div>
         </div>
 
+        @endif
+
         <!-- Berita terbaru -->
-        <div class="lg:col-span-3 bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+        @if ($latestPosts !== null)
+        <div class="{{ $actions ? 'lg:col-span-3' : 'lg:col-span-5' }} bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
             <div class="flex items-center justify-between">
                 <h2 class="font-extrabold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-newspaper text-tosca-600"></i> Berita Terbaru</h2>
                 <a href="{{ route('admin.berita.index') }}" class="text-xs font-bold text-tosca-700 hover:underline">Lihat semua &rarr;</a>
@@ -83,6 +82,7 @@
                 @endforelse
             </div>
         </div>
+        @endif
     </div>
 
     @if ($upcoming->isNotEmpty())

@@ -14,6 +14,8 @@
         'filterOptions' => collect(\App\Models\Staff::TYPES)->map(fn ($t) => $t[0])->all(),
     ])
 
+    <div data-live-results>
+
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         @if ($items->isEmpty())
             <x-admin.empty message="Data tidak ditemukan." :href="route('admin.sdm.create')" label="Tambah Data" />
@@ -51,4 +53,5 @@
     </div>
 
     <div class="mt-4">{{ $items->links('admin.partials.pagination') }}</div>
+    </div>
 @endsection

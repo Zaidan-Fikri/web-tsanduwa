@@ -9,6 +9,8 @@
 
     @include('admin.partials.search', ['placeholder' => 'Cari judul agenda...'])
 
+    <div data-live-results>
+
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         @if ($items->isEmpty())
             <x-admin.empty message="Belum ada agenda." :href="route('admin.agenda.create')" label="Tambah Agenda" />
@@ -37,4 +39,5 @@
     </div>
 
     <div class="mt-4">{{ $items->links('admin.partials.pagination') }}</div>
+    </div>
 @endsection

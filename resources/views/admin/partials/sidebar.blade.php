@@ -1,46 +1,34 @@
 @php
-    // Menu admin mengikuti urutan menu navbar website.
-    $menu = [
-        ['Dashboard', null, [
-            ['Dashboard', 'fa-gauge-high', route('admin.dashboard'), request()->routeIs('admin.dashboard')],
-        ]],
-        ['Beranda', 'fa-house', [
-            ['Slider Utama', 'fa-images', route('admin.slider.index'), request()->routeIs('admin.slider.*')],
-            ['Agenda', 'fa-calendar-days', route('admin.agenda.index'), request()->routeIs('admin.agenda.*')],
-            ['Fasilitas', 'fa-building', route('admin.fasilitas.index'), request()->routeIs('admin.fasilitas.*')],
-            ['Statistik & Video', 'fa-chart-simple', route('admin.settings.edit', 'beranda'), request()->is(admin_path().'/pengaturan/beranda')],
-        ]],
-        ['Profil', 'fa-id-card', [
-            ['Sambutan Kepala', 'fa-user-tie', route('admin.settings.edit', 'sambutan'), request()->is(admin_path().'/pengaturan/sambutan')],
-            ['Identitas Sekolah', 'fa-id-card', route('admin.settings.edit', 'identitas'), request()->is(admin_path().'/pengaturan/identitas')],
-            ['Visi & Misi', 'fa-bullseye', route('admin.misi.index'), request()->routeIs('admin.misi.*')],
-            ['Sejarah', 'fa-landmark', route('admin.settings.edit', 'sejarah'), request()->is(admin_path().'/pengaturan/sejarah')],
-            ['Struktur Organisasi', 'fa-sitemap', route('admin.struktur.index'), request()->routeIs('admin.struktur.*')],
-            ['Unit Kerja', 'fa-briefcase', route('admin.unit-kerja.index'), request()->routeIs('admin.unit-kerja.*')],
-            ['Guru & Tendik', 'fa-chalkboard-user', route('admin.sdm.index'), request()->routeIs('admin.sdm.*')],
-        ]],
-        ['Program Madrasah', 'fa-book-quran', [
-            ['Program Madrasah', 'fa-book-quran', route('admin.program.index'), request()->routeIs('admin.program.*')],
-        ]],
-        ['Ekstrakurikuler', 'fa-person-running', [
-            ['Ekstrakurikuler', 'fa-person-running', route('admin.ekskul.index'), request()->routeIs('admin.ekskul.*')],
-        ]],
-        ['Informasi', 'fa-newspaper', [
-            ['Berita', 'fa-newspaper', route('admin.berita.index'), request()->routeIs('admin.berita.*')],
-            ['Prestasi', 'fa-trophy', route('admin.prestasi.index'), request()->routeIs('admin.prestasi.*')],
-            ['Galeri', 'fa-photo-film', route('admin.galeri.index'), request()->routeIs('admin.galeri.*')],
-        ]],
-        ['SPMB', 'fa-user-plus', [
-            ['Info SPMB & Brosur', 'fa-bullhorn', route('admin.settings.edit', 'spmb'), request()->is(admin_path().'/pengaturan/spmb')],
-            ['Prosedur Pendaftaran', 'fa-list-ol', route('admin.spmb-prosedur.index'), request()->routeIs('admin.spmb-prosedur.*')],
-            ['Persyaratan', 'fa-folder-open', route('admin.spmb-persyaratan.index'), request()->routeIs('admin.spmb-persyaratan.*')],
-        ]],
-        ['Pengaturan', 'fa-gear', array_values(array_filter([
-            ['Kontak & Media Sosial', 'fa-address-book', route('admin.settings.edit', 'kontak'), request()->is(admin_path().'/pengaturan/kontak')],
-            auth()->user()->isSuperAdmin() ? ['Pengguna Admin', 'fa-users-gear', route('admin.pengguna.index'), request()->routeIs('admin.pengguna.*')] : null,
-            ['Akun Saya', 'fa-user-shield', route('admin.account.edit'), request()->routeIs('admin.account.*')],
-        ]))],
-    ];
+    // Menu admin mengikuti urutan menu navbar website (lihat App\Support\AdminMenu).
+    // Admin dengan akses terbatas hanya melihat menu yang dicentang di Pengguna Admin.
+    $user = auth()->user();
+    $settingsGroup = request()->routeIs('admin.settings.*') ? request()->route('group') : null;
+
+    $menu = [['Dashboard', null, [
+        ['Dashboard', 'fa-gauge-high', route('admin.dashboard'), request()->routeIs('admin.dashboard')],
+    ]]];
+
+    foreach (\App\Support\AdminMenu::groups() as $group) {
+        $items = [];
+        foreach ($group['items'] as $item) {
+            if (! $user->canAccess($item['key'])) {
+                continue;
+            }
+            $active = ($settingsGroup !== null && ($item['settings'] ?? null) === $settingsGroup)
+                || (! empty($item['match']) && request()->routeIs(...$item['match']));
+            $items[] = [$item['label'], $item['icon'], \App\Support\AdminMenu::url($item), $active];
+        }
+        if ($items) {
+            $menu[$group['label']] = [$group['label'], $group['icon'], $items];
+        }
+    }
+
+    // Menu akun (selalu ada) & manajemen pengguna (khusus Super Admin)
+    $accountItems = array_values(array_filter([
+        $user->isSuperAdmin() ? ['Pengguna Admin', 'fa-users-gear', route('admin.pengguna.index'), request()->routeIs('admin.pengguna.*')] : null,
+        ['Akun Saya', 'fa-user-shield', route('admin.account.edit'), request()->routeIs('admin.account.*')],
+    ]));
+    $menu['Pengaturan'] = ['Pengaturan', 'fa-gear', array_merge($menu['Pengaturan'][2] ?? [], $accountItems)];
 @endphp
 <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-tosca-950 text-slate-300 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300">
     <!-- Logo -->

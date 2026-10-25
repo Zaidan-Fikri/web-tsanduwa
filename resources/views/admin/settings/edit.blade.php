@@ -7,10 +7,13 @@
         'beranda' => [['Slider Utama', 'admin.slider.index'], ['Agenda', 'admin.agenda.index'], ['Fasilitas', 'admin.fasilitas.index']],
         'spmb' => [['Prosedur Pendaftaran', 'admin.spmb-prosedur.index'], ['Persyaratan', 'admin.spmb-persyaratan.index']],
         'visi' => [['Daftar Misi', 'admin.misi.index']],
+        'pembayaran' => [['Tagihan Pembayaran Sekolah', 'admin.spp.index'], ['Upload Excel Tagihan', 'admin.spp.import']],
     ][$group] ?? [];
+    $menuByRoute = collect(\App\Support\AdminMenu::items())->filter(fn ($i) => isset($i['route']))->keyBy('route');
+    $related = array_values(array_filter($related, fn ($r) => auth()->user()->canAccess($menuByRoute[$r[1]]['key'] ?? '')));
     $preview = [
         'beranda' => route('home'), 'sambutan' => route('profil.sambutan'), 'identitas' => route('profil.identitas'),
-        'visi' => route('profil.visimisi'), 'sejarah' => route('profil.sejarah'), 'spmb' => route('spmb'), 'kontak' => route('home'),
+        'visi' => route('profil.visimisi'), 'sejarah' => route('profil.sejarah'), 'spmb' => route('spmb'), 'kontak' => route('home'), 'pembayaran' => route('pembayaran'),
     ][$group] ?? route('home');
 @endphp
 

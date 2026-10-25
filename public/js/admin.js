@@ -27,15 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('confirm-modal');
     let pendingForm = null;
     const closeConfirm = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); pendingForm = null; };
-    document.querySelectorAll('form[data-confirm]').forEach(form => {
-        form.addEventListener('submit', e => {
-            if (form.dataset.confirmed) return;
-            e.preventDefault();
-            pendingForm = form;
-            document.getElementById('confirm-message').textContent = form.dataset.confirm;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        });
+    // Didaftarkan di document agar tetap berlaku untuk baris tabel hasil pencarian langsung.
+    document.addEventListener('submit', e => {
+        const form = e.target.closest('form[data-confirm]');
+        if (!form || form.dataset.confirmed) return;
+        e.preventDefault();
+        pendingForm = form;
+        document.getElementById('confirm-message').textContent = form.dataset.confirm;
+        document.getElementById('confirm-title').textContent = form.dataset.confirmTitle || 'Yakin ingin menghapus?';
+        document.getElementById('confirm-ok-label').textContent = form.dataset.confirmButton || 'Ya, Hapus';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
     });
     modal.querySelector('[data-confirm-cancel]').addEventListener('click', closeConfirm);
     modal.addEventListener('click', e => { if (e.target === modal) closeConfirm(); });
@@ -216,3 +218,46 @@ async function compressImage(file, maxSize = 1920, quality = 0.85) {
 function formatBytes(bytes) {
     return bytes >= 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(bytes / 1024)) + ' KB';
 }
+
+// ===== Pencarian langsung (tanpa klik tombol Cari) =====
+// Form dengan [data-live-search] memuat ulang isi [data-live-results] saat mengetik / mengganti filter.
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('form[data-live-search]').forEach(form => {
+        const results = document.querySelector('[data-live-results]');
+        if (!results || !window.fetch) return;
+
+        const reset = form.querySelector('[data-live-reset]');
+        let timer = null;
+        let controller = null;
+
+        const run = async () => {
+            const params = new URLSearchParams();
+            new FormData(form).forEach((value, key) => { if (String(value).trim() !== '') params.append(key, value); });
+            const url = (form.getAttribute('action') || location.pathname) + (params.toString() ? '?' + params : '');
+
+            if (controller) controller.abort();
+            controller = new AbortController();
+            results.classList.add('opacity-60', 'pointer-events-none', 'transition-opacity');
+
+            try {
+                const response = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' }, signal: controller.signal });
+                if (!response.ok) throw new Error(response.status);
+                const html = new DOMParser().parseFromString(await response.text(), 'text/html');
+                const fresh = html.querySelector('[data-live-results]');
+                if (fresh) results.innerHTML = fresh.innerHTML;
+                history.replaceState(null, '', url);
+                if (reset) reset.classList.toggle('hidden', !params.toString());
+            } catch (err) {
+                if (err.name !== 'AbortError') form.submit(); // gagal: pakai cara biasa
+            } finally {
+                results.classList.remove('opacity-60', 'pointer-events-none');
+            }
+        };
+
+        form.querySelectorAll('input[type=search], input[type=text]').forEach(input => {
+            input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(run, 350); });
+        });
+        form.querySelectorAll('select').forEach(select => select.addEventListener('change', run));
+        form.addEventListener('submit', e => { e.preventDefault(); clearTimeout(timer); run(); });
+    });
+});

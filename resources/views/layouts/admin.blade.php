@@ -74,16 +74,16 @@
     <div id="confirm-modal" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl text-center">
             <span class="w-16 h-16 mx-auto rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-3xl"><i class="fa-solid fa-trash-can"></i></span>
-            <h3 class="text-lg font-extrabold text-slate-900 mt-4">Yakin ingin menghapus?</h3>
+            <h3 id="confirm-title" class="text-lg font-extrabold text-slate-900 mt-4">Yakin ingin menghapus?</h3>
             <p id="confirm-message" class="text-sm text-slate-500 mt-2"></p>
             <div class="mt-6 grid grid-cols-2 gap-2">
                 <button type="button" data-confirm-cancel class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Batal</button>
-                <button type="button" data-confirm-ok class="px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 transition">Ya, Hapus</button>
+                <button type="button" data-confirm-ok class="px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-rose-600 hover:bg-rose-700 transition" id="confirm-ok-label">Ya, Hapus</button>
             </div>
         </div>
     </div>
 
-    <script src="{{ asset('js/admin.js') }}?v=3"></script>
+    <script src="{{ asset('js/admin.js') }}?v=5"></script>
     @stack('scripts')
 </body>
 </html>

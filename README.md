@@ -29,6 +29,16 @@ php artisan serve
 
 Gambar dari panel admin disimpan di `public/uploads/` (tidak perlu `storage:link`).
 
+## Tagihan SPP (menu Pembayaran)
+
+- **Admin → Pembayaran → Upload Excel Tagihan**: upload file template *Data Tagihan Bulanan* (.xlsx, boleh beberapa file sekaligus). Setiap sheet = satu kelas; kolom tagihan (PPDB, Kls 7, Kls 8, SPP, Kekurangan SMT1, ...) dikenali otomatis dari judul kolom.
+- Setelah upload muncul **preview** per kelas (baris error/peringatan ditandai). Data baru tersimpan setelah klik **Simpan**; upload berikutnya memperbarui tagihan siswa dengan NISN yang sama.
+- Call center & rekening di bawah tabel Excel bisa langsung dipakai untuk **Info Pembayaran**.
+- Wali murid membuka **Informasi → Pembayaran**, memasukkan **NISN + kode akses**, lalu melihat rincian tagihan.
+- **Kode akses** (6 karakter, unik per siswa) dibuat otomatis saat siswa pertama kali diupload dan tidak berubah saat upload ulang. Cetak slip per kelas di **Tagihan Pembayaran Sekolah → Cetak Kode Akses**; kode bisa dibuat ulang di halaman Edit bila tersebar.
+- Keamanan cek tagihan: pesan salah dibuat umum (tidak membocorkan NISN terdaftar), NISN dikunci 30 menit setelah 5x kode salah, dan pencarian dibatasi 10x/menit & 60x/hari per IP.
+- File Excel berisi data siswa diabaikan Git (`*.xlsx` di `.gitignore`), jangan di-commit.
+
 ## Keamanan
 
 Sudah diterapkan:

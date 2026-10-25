@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\AdminMenu;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -68,11 +69,23 @@ class UserController extends Controller
             'email' => ['nullable', 'email:rfc', 'max:150', Rule::unique('users')->ignore($user)],
             'role' => ['required', Rule::in(array_keys(User::ROLES))],
             'password' => [$user ? 'nullable' : 'required', 'confirmed', Password::min(8)->letters()->numbers()],
-        ]);
+            'access' => ['required_if:role,admin', 'nullable', Rule::in(['all', 'custom'])],
+            'permissions' => ['exclude_unless:access,custom', 'exclude_if:role,superadmin', 'required', 'array', 'min:1'],
+            'permissions.*' => ['string', Rule::in(AdminMenu::keys())],
+        ], [
+            'permissions.required' => 'Pilih minimal satu menu yang boleh diakses.',
+            'permissions.min' => 'Pilih minimal satu menu yang boleh diakses.',
+        ], ['access' => 'hak akses']);
 
         if (blank($data['password'] ?? null)) {
             unset($data['password']);
         }
+
+        // Super Admin & "Semua menu" = null (akses penuh); selain itu daftar kode menu yang dicentang.
+        $data['permissions'] = $data['role'] === 'admin' && ($data['access'] ?? 'all') === 'custom'
+            ? array_values(array_intersect(AdminMenu::keys(), $data['permissions']))
+            : null;
+        unset($data['access']);
 
         return $data;
     }

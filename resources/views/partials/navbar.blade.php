@@ -16,6 +16,7 @@
         ['berita', 'fa-newspaper', 'Berita'],
         ['prestasi', 'fa-trophy', 'Prestasi'],
         ['galeri', 'fa-images', 'Galeri'],
+        ['pembayaran', 'fa-wallet', 'Pembayaran'],
     ];
 @endphp
     <!-- Header / Navbar -->
@@ -68,7 +69,7 @@
                     <a href="{{ route('ekskul') }}" class="{{ $navBtn }}{{ request()->routeIs('ekskul') ? $navActive : '' }}">Ekstrakurikuler</a>
                     <!-- Dropdown Informasi -->
                     <div class="relative group">
-                        <button type="button" class="{{ $navBtn }} flex items-center space-x-1{{ request()->routeIs('berita*', 'prestasi', 'galeri', 'agenda') ? $navActive : '' }}">
+                        <button type="button" class="{{ $navBtn }} flex items-center space-x-1{{ request()->routeIs('berita*', 'prestasi', 'galeri', 'agenda', 'pembayaran*') ? $navActive : '' }}">
                             <span>Informasi</span>
                             <i class="fa-solid fa-chevron-down text-xs transition-transform group-hover:rotate-180"></i>
                         </button>
@@ -135,6 +136,7 @@
                     <a href="{{ route('berita') }}" class="block w-full text-left py-1 text-slate-600">Berita</a>
                     <a href="{{ route('prestasi') }}" class="block w-full text-left py-1 text-slate-600">Prestasi</a>
                     <a href="{{ route('galeri') }}" class="block w-full text-left py-1 text-slate-600">Galeri Foto & Video</a>
+                    <a href="{{ route('pembayaran') }}" class="block w-full text-left py-1 text-slate-600">Pembayaran (Cek Tagihan)</a>
                 </div>
             </div>
             <div class="pt-2 grid grid-cols-2 gap-2">

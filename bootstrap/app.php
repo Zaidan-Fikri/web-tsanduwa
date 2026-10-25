@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminArea;
+use App\Http\Middleware\AdminMenuAccess;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SuperAdminOnly;
 use Illuminate\Foundation\Application;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin.area' => AdminArea::class,
+            'admin.menu' => AdminMenuAccess::class,
             'superadmin' => SuperAdminOnly::class,
         ]);
 

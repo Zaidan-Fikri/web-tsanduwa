@@ -22,3 +22,8 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Data siswa (file Excel tagihan) jangan pernah ikut ter-commit
+*.xlsx
+*.xls
+*.csv

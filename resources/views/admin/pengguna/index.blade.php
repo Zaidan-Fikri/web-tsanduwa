@@ -10,7 +10,7 @@
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="admin-table w-full">
-                <thead><tr><th>Nama</th><th>Peran</th><th>Login Terakhir</th><th class="text-right">Aksi</th></tr></thead>
+                <thead><tr><th>Nama</th><th>Peran</th><th>Akses Menu</th><th>Login Terakhir</th><th class="text-right">Aksi</th></tr></thead>
                 <tbody>
                     @foreach ($items as $item)
                         <tr>
@@ -24,6 +24,13 @@
                                 </div>
                             </td>
                             <td><span class="text-[11px] font-bold px-2.5 py-1 rounded-full {{ $item->isSuperAdmin() ? 'bg-gold-500 text-slate-950' : 'bg-tosca-100 text-tosca-800' }}">{{ $item->roleLabel() }}</span></td>
+                            <td class="text-xs text-slate-600 max-w-xs">
+                                @if ($item->hasFullAccess())
+                                    <span class="font-semibold text-tosca-700"><i class="fa-solid fa-unlock mr-1"></i>Semua menu</span>
+                                @else
+                                    <span class="font-semibold text-slate-700">{{ count($item->accessLabels()) }} menu:</span> {{ implode(', ', $item->accessLabels()) }}
+                                @endif
+                            </td>
                             <td class="text-xs text-slate-600">
                                 @if ($item->last_login_at)
                                     {{ $item->last_login_at->translatedFormat('d M Y H:i') }}
@@ -48,6 +55,6 @@
 
     <div class="mt-4 p-4 rounded-xl bg-tosca-50 border border-tosca-100 text-sm text-tosca-900">
         <i class="fa-solid fa-circle-info text-tosca-600 mr-1"></i>
-        <b>Super Admin</b> dapat mengelola pengguna lain. <b>Admin</b> dapat mengelola seluruh isi website kecuali menu Pengguna.
+        <b>Super Admin</b> dapat mengelola pengguna lain. <b>Admin</b> dapat mengelola menu yang diizinkan (semua menu atau menu tertentu), kecuali Pengguna Admin.
     </div>
 @endsection

@@ -14,6 +14,8 @@
         'filterOptions' => collect(\App\Models\Post::CATEGORIES)->map(fn ($c) => $c[0])->all(),
     ])
 
+    <div data-live-results>
+
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         @if ($items->isEmpty())
             <x-admin.empty message="Berita tidak ditemukan." :href="route('admin.berita.create')" label="Tulis Berita" />
@@ -51,4 +53,5 @@
     </div>
 
     <div class="mt-4">{{ $items->links('admin.partials.pagination') }}</div>
+    </div>
 @endsection

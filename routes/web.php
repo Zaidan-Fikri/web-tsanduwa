@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -40,6 +41,12 @@ Route::controller(SiteController::class)->group(function () {
     Route::get('spmb', 'spmb')->name('spmb');
 });
 
+// Cek tagihan SPP oleh wali murid (dibatasi agar data siswa tidak bisa dikumpulkan massal).
+Route::controller(PaymentController::class)->group(function () {
+    Route::get('pembayaran', 'show')->name('pembayaran');
+    Route::post('pembayaran', 'check')->middleware('throttle:spp-check')->name('pembayaran.check');
+});
+
 // Gambar upload yang tersimpan di database. Tanpa session/cookie agar ringan & bisa di-cache browser.
 Route::get('media/{id}.{extension}', [MediaController::class, 'show'])
     ->whereNumber('id')
@@ -66,7 +73,8 @@ Route::prefix(admin_path())->name('admin.')->middleware('admin.area')->group(fun
     });
 
     // auth.session: sesi di perangkat lain otomatis keluar saat password diganti.
-    Route::middleware(['auth', 'auth.session'])->group(function () {
+    // admin.menu: Admin hanya bisa membuka menu yang dicentang di Pengguna Admin.
+    Route::middleware(['auth', 'auth.session', 'admin.menu'])->group(function () {
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
         Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
@@ -90,6 +98,28 @@ Route::prefix(admin_path())->name('admin.')->middleware('admin.area')->group(fun
         Route::resource('galeri', Admin\GalleryController::class)->parameters(['galeri' => 'gallery'])->except('show');
         Route::resource('spmb-prosedur', Admin\SpmbStepController::class)->parameters(['spmb-prosedur' => 'spmbStep'])->except('show');
         Route::resource('spmb-persyaratan', Admin\SpmbRequirementController::class)->parameters(['spmb-persyaratan' => 'spmbRequirement'])->except('show');
+
+        // Tagihan SPP (upload Excel -> preview -> simpan)
+        Route::controller(Admin\SppBillController::class)->prefix('tagihan-spp')->name('spp.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('import', 'importForm')->name('import');
+            Route::post('import', 'upload')->name('upload');
+            Route::get('import/preview', 'preview')->name('preview');
+            Route::get('kode-akses', 'codes')->name('codes');
+            Route::post('import/simpan', 'commit')->name('commit');
+            Route::post('import/batal', 'cancel')->name('cancel');
+            Route::delete('kelas/{className}', 'destroyClass')->where('className', '[0-9A-Za-z]{1,10}')->name('destroy-class');
+            Route::delete('{sppBill}', 'destroy')->name('destroy');
+        });
+
+        // Edit tagihan per siswa: catat pembayaran / cicilan, koreksi data, batalkan pembayaran
+        Route::controller(Admin\SppPaymentController::class)->prefix('tagihan-spp/{sppBill}')->name('spp.')->group(function () {
+            Route::get('edit', 'edit')->name('edit');
+            Route::post('bayar', 'pay')->name('pay');
+            Route::put('/', 'update')->name('update');
+            Route::delete('pembayaran/{sppPayment}', 'cancel')->name('payment.cancel');
+            Route::post('reset-kode', 'resetCode')->name('reset-code');
+        });
 
         // Akun
         Route::get('akun', [Admin\AccountController::class, 'edit'])->name('account.edit');

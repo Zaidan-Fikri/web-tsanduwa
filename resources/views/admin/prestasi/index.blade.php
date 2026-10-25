@@ -14,6 +14,8 @@
         'filterOptions' => \App\Models\Achievement::LEVELS,
     ])
 
+    <div data-live-results>
+
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         @if ($items->isEmpty())
             <x-admin.empty message="Prestasi tidak ditemukan." :href="route('admin.prestasi.create')" label="Tambah Prestasi" />
@@ -48,4 +50,5 @@
     </div>
 
     <div class="mt-4">{{ $items->links('admin.partials.pagination') }}</div>
+    </div>
 @endsection

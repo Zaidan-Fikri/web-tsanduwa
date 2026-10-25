@@ -105,3 +105,11 @@ if (! function_exists('admin_path')) {
         return trim(config('app.admin_path', 'admin'), '/') ?: 'admin';
     }
 }
+
+if (! function_exists('rupiah')) {
+    /** 160000 => "Rp 160.000" */
+    function rupiah(int|float|null $amount): string
+    {
+        return 'Rp '.number_format((float) $amount, 0, ',', '.');
+    }
+}
