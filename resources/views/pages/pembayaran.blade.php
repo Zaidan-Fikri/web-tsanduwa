@@ -67,7 +67,7 @@
                                 class="w-full pl-11 pr-4 py-3.5 rounded-xl border text-lg font-bold tracking-[0.25em] uppercase placeholder:normal-case placeholder:tracking-normal placeholder:font-medium placeholder:text-base focus:ring-2 focus:ring-tosca-600 focus:border-tosca-600 focus:outline-none {{ $errors->has('access_code') ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200' }}">
                         </div>
                         <p id="code-error" class="text-sm font-semibold text-rose-600 mt-3 {{ $errors->has('access_code') ? '' : 'hidden' }}"><i class="fa-solid fa-circle-exclamation mr-1"></i><span>{{ $errors->first('access_code') }}</span></p>
-                        <p class="text-xs text-slate-500 mt-3"><i class="fa-solid fa-circle-info text-tosca-600 mr-1"></i>Kode akses 6 huruf/angka dari wali kelas / bagian keuangan madrasah.</p>
+                        <p class="text-xs text-slate-500 mt-3"><i class="fa-solid fa-circle-info text-tosca-600 mr-1"></i>Kode akses 6 huruf/angka dari bagian keuangan madrasah.</p>
                         <div class="grid grid-cols-2 gap-2 mt-6">
                             <button type="button" onclick="closeCodeModal()" class="px-4 py-3 rounded-xl text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Batal</button>
                             <button type="submit" class="px-4 py-3 rounded-xl text-sm font-bold bg-tosca-700 hover:bg-tosca-800 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition inline-flex items-center justify-center gap-2"><i class="fa-solid fa-unlock text-gold-400"></i> Lihat Tagihan</button>
@@ -76,7 +76,7 @@
                 </div>
             </form>
             <p id="nisn-error" class="text-sm font-semibold text-rose-600 mt-3 {{ $errors->has('nisn') ? '' : 'hidden' }}"><i class="fa-solid fa-circle-exclamation mr-1"></i><span>{{ $errors->first('nisn') }}</span></p>
-            <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-shield-halved text-tosca-600 mr-1"></i>Demi menjaga privasi, tagihan hanya bisa dilihat dengan <b>NISN</b> dan <b>kode akses</b> siswa. Kode akses dibagikan oleh wali kelas / bagian keuangan madrasah. Jangan bagikan kode akses kepada orang lain.</p>
+            <p class="text-xs text-slate-500 mt-3 leading-relaxed"><i class="fa-solid fa-shield-halved text-tosca-600 mr-1"></i>Demi menjaga privasi, tagihan hanya bisa dilihat dengan <b>NISN</b> dan <b>kode akses</b> siswa. Kode akses dibagikan oleh bagian keuangan madrasah. Jangan bagikan kode akses kepada orang lain.</p>
         </div>
 
         <!-- Hasil -->

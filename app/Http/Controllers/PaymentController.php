@@ -46,7 +46,7 @@ class PaymentController extends Controller
         if (RateLimiter::tooManyAttempts($lockKey, self::MAX_FAILED)) {
             $minutes = (int) ceil(RateLimiter::availableIn($lockKey) / 60);
             throw ValidationException::withMessages([
-                'access_code' => "Terlalu banyak percobaan kode akses yang salah untuk NISN ini. Coba lagi dalam {$minutes} menit, atau hubungi wali kelas.",
+                'access_code' => "Terlalu banyak percobaan kode akses yang salah untuk NISN ini. Coba lagi dalam {$minutes} menit, atau hubungi bagian keuangan madrasah.",
             ]);
         }
 
@@ -57,7 +57,7 @@ class PaymentController extends Controller
             RateLimiter::hit($lockKey, self::LOCK_SECONDS);
 
             throw ValidationException::withMessages([
-                'access_code' => 'NISN atau kode akses tidak cocok. Periksa kembali kode dari wali kelas.',
+                'access_code' => 'NISN atau kode akses tidak cocok. Periksa kembali kode akses Anda.',
             ]);
         }
 
