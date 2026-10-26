@@ -136,7 +136,7 @@
                     <a href="{{ route('berita') }}" class="block w-full text-left py-1 text-slate-600">Berita</a>
                     <a href="{{ route('prestasi') }}" class="block w-full text-left py-1 text-slate-600">Prestasi</a>
                     <a href="{{ route('galeri') }}" class="block w-full text-left py-1 text-slate-600">Galeri Foto & Video</a>
-                    <a href="{{ route('pembayaran') }}" class="block w-full text-left py-1 text-slate-600">Pembayaran (Cek Tagihan)</a>
+                    <a href="{{ route('pembayaran') }}" class="block w-full text-left py-1 text-slate-600">Pembayaran</a>
                 </div>
             </div>
             <div class="pt-2 grid grid-cols-2 gap-2">
